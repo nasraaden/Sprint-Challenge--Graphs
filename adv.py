@@ -10,11 +10,11 @@ world = World()
 
 
 # You may uncomment the smaller graphs for development and testing purposes.
-map_file = "maps/test_line.txt"
+# map_file = "maps/test_line.txt"
 # map_file = "maps/test_cross.txt"
 # map_file = "maps/test_loop.txt"
 # map_file = "maps/test_loop_fork.txt"
-# map_file = "maps/main_maze.txt"
+map_file = "maps/main_maze.txt"
 
 # Loads the map into a dictionary
 room_graph = literal_eval(open(map_file, "r").read())
@@ -63,7 +63,7 @@ def traverse_map(starting_room, visited=None):
 # figure out how to update traversal path
 
 print(traverse_map(0))
-traversal_path = traverse_map(player.current_room.id)
+# traversal_path = traverse_map(player.current_room.id)
 
 # TRAVERSAL TEST - DO NOT MODIFY
 visited_rooms = set()
