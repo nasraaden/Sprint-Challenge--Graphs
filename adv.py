@@ -5,6 +5,8 @@ from world import World
 import random
 from ast import literal_eval
 
+from util import Stack
+
 # Load world
 world = World()
 
@@ -28,41 +30,62 @@ player = Player(world.starting_room)
 # Fill this out with directions to walk
 # traversal_path = ['n', 'n']
 traversal_path = []
-reverse = {'n': 's', 's': 'n', 'e': 'w', 'w': 'e'}
+# reverse = {'n': 's', 's': 'n', 'e': 'w', 'w': 'e'}
 # keep track of reversal
 # reversal_path = []
 
 
-def traverse_map(starting_room, visited=None):
-    if visited is None:
-        visited = {}
+def reversal_path(direction):
+    if direction == "n":
+        return "s"
+    elif direction == "s":
+        return "n"
+    elif direction == "e":
+        return "w"
+    elif direction == "w":
+        return "e"
+
+
+def traverse_map(starting_room):
+    stack = Stack()
+    visited = set()
     starting_room = player.current_room.id
-    print('PLAYER ROOM ID', player.current_room.id)
-    visited[starting_room] = player.current_room.get_exits()
-    print('VISITED', visited)
     # iterate through exits
     while len(visited) < len(world.rooms):
+        path = []
         for room_exit in player.current_room.get_exits():
-            # if exit has not been visited, travel to that exit
-            player.travel(room_exit)
-            if player.current_room.id not in traversal_path:
-                traversal_path.append(
-                    (player.current_room.id, player.current_room.get_exits()))
-            if player.current_room.id not in visited:
-                new_path = traverse_map(player.current_room.id, visited)
-                if new_path:
-                    return new_path
-            if player.current_room.id in visited:
-                player.travel(reverse[room_exit])
-        print('TRAVERSAL PATH', traversal_path)
-        return traversal_path
+            if room_exit is not None:
+                if player.current_room.get_room_in_direction(room_exit) not in visited:
+                    path.append(room_exit)
+        # if exit has not been visited, travel to that exit
+        # player.travel(room_exit)
+        visited.add(player.current_room.id)
+        # if player.current_room.id not in traversal_path:
+        #     traversal_path.append(
+        #         (player.current_room.id, player.current_room.get_exits()))
+        # if player.current_room.id not in visited:
+        #     new_path = traverse_map(player.current_room.id, visited)
+        #     if new_path:
+        #         return new_path
+        # if player.current_room.id in visited:
+        #     player.travel(reverse[room_exit])
+        if len(path) != 0:
+            move = random.randint(0, len(path) - 1)
+            stack.push(path[move])
+            player.travel(path[move])
+            traversal_path.append(path[move])
+
+        if len(path) == 0:
+            last = stack.pop()
+            player.travel(reversal_path(last))
+            traversal_path.append(reversal_path(last))
 
 
 # check to see if we are at a dead end
 # if we are move in the reverse direction until we get to a room that is not visited
 # figure out how to update traversal path
 
-print(traverse_map(0))
+traverse_map(0)
 # traversal_path = traverse_map(player.current_room.id)
 
 # TRAVERSAL TEST - DO NOT MODIFY
