@@ -49,7 +49,7 @@ def reversal_path(direction):
 def traverse_map(starting_room):
     stack = Stack()
     visited = set()
-    starting_room = player.current_room.id
+    starting_room = player.current_room
     # iterate through exits
     while len(visited) < len(world.rooms):
         path = []
@@ -59,7 +59,7 @@ def traverse_map(starting_room):
                     path.append(room_exit)
         # if exit has not been visited, travel to that exit
         # player.travel(room_exit)
-        visited.add(player.current_room.id)
+        visited.add(player.current_room)
         # if player.current_room.id not in traversal_path:
         #     traversal_path.append(
         #         (player.current_room.id, player.current_room.get_exits()))
@@ -75,7 +75,7 @@ def traverse_map(starting_room):
             player.travel(path[move])
             traversal_path.append(path[move])
 
-        if len(path) == 0:
+        else:
             last = stack.pop()
             player.travel(reversal_path(last))
             traversal_path.append(reversal_path(last))
@@ -84,7 +84,6 @@ def traverse_map(starting_room):
 # check to see if we are at a dead end
 # if we are move in the reverse direction until we get to a room that is not visited
 # figure out how to update traversal path
-
 traverse_map(0)
 # traversal_path = traverse_map(player.current_room.id)
 
